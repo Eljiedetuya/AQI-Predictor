@@ -10,7 +10,7 @@ Philippine-city AQI prediction web app built with Flask, Pandas, scikit-learn, a
 It predicts AQI from city, date, and pollutant inputs and provides trend, comparison, map snapshot, history, and export features.
 
 ## Live
-App URL: [https://aqi-predictor-1-g31a.onrender.com/](https://aqi-predictor-1-g31a.onrender.com/)
+App URL: [https://aqi-predictor-1-g31a.onrender.com/](https://aqi-predictor-1-g3la.onrender.com/)
 
 ## Tech Stack
 - Python
