@@ -119,6 +119,25 @@ input:focus,select:focus{
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 .chip:hover{transform:translateY(-1px);box-shadow:0 8px 14px rgba(37,73,122,.12);border-color:#7fa6d2}
+.chip.active{background:linear-gradient(180deg,#dbf5f2,#c3ece7);border-color:#53b6ad;color:#0f5f5f}
+.chip.muted{opacity:.45;cursor:not-allowed}
+.city-tools{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.city-search{font-size:14px}
+.recent-wrap{display:grid;gap:4px}
+.toggles{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  border:1px solid #c2d6ea;
+  border-radius:999px;
+  background:linear-gradient(180deg,#f9fcff,#edf4fb);
+  color:#28486f;
+  font-size:12px;
+  font-weight:700;
+  padding:6px 10px;
+}
+.toggle input{accent-color:#118f8f}
 .small{font-size:12px;color:var(--ink-soft);margin:6px 0;line-height:1.45}
 .rowsplit{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .poll{
@@ -129,15 +148,19 @@ input:focus,select:focus{
   display:grid;
   gap:5px;
 }
+.poll.advanced{display:none}
+.poll.unsafe{border-color:#e29898;background:linear-gradient(175deg,#fff6f6,#ffe9e9)}
 .poll input[type="number"]{font-size:16px}
 .poll input[type="range"]{height:26px;padding:0;border:none;box-shadow:none;background:transparent}
 .poll input[type="range"]::-webkit-slider-runnable-track{
-  height:8px;border-radius:999px;background:linear-gradient(90deg,#0f8f8f,#8fcfce);
+  height:8px;border-radius:999px;background:var(--slider-track,linear-gradient(90deg,#0f8f8f,#8fcfce));
 }
 .poll input[type="range"]::-webkit-slider-thumb{
   -webkit-appearance:none;appearance:none;margin-top:-5px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #0f8f8f;
 }
 .top{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#2a4062}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#5a7393}
+.meta .warn{color:#b33b3b;font-weight:700}
 .note{
   margin-top:8px;
   padding:8px 10px;
@@ -172,6 +195,7 @@ button:hover{transform:translateY(-1px)}
 .soft:hover{box-shadow:0 10px 18px rgba(36,70,113,.12)}
 .loading{display:none;margin-top:9px;color:var(--brand);font-weight:700}
 .loading.show{display:block}
+.loading.show::after{content:'';display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:8px;background:#13a4a4;animation:pulse 1.1s ease infinite}
 .error{
   display:none;
   margin-top:9px;
@@ -281,6 +305,20 @@ button:hover{transform:translateY(-1px)}
   font-size:12px;
   background:linear-gradient(180deg,#f6faff,#edf4fb);
 }
+.legend .line.active{border-color:#4c85c2;box-shadow:0 0 0 2px rgba(62,124,195,.2) inset}
+.legend .line[data-band="good"].active{background:linear-gradient(180deg,#e8f8ef,#cff0df)}
+.legend .line[data-band="moderate"].active{background:linear-gradient(180deg,#fff6d7,#ffebaa)}
+.legend .line[data-band="unhealthy-sensitive"].active{background:linear-gradient(180deg,#ffedd9,#ffd8b0)}
+.legend .line[data-band="unhealthy"].active{background:linear-gradient(180deg,#ffe4e4,#ffcaca)}
+.legend .line[data-band="very-unhealthy"].active{background:linear-gradient(180deg,#efddf5,#ddc1ea)}
+.legend .line[data-band="hazardous"].active{background:linear-gradient(180deg,#5e2e4d,#4c223f);color:#fff}
+.map-status{font-size:12px;color:#3c587d;margin-top:7px;padding:6px 8px;border:1px solid #c6d8ea;border-radius:8px;background:#edf4fb}
+.map.aqi-good{box-shadow:0 0 0 2px rgba(27,158,66,.35) inset}
+.map.aqi-moderate{box-shadow:0 0 0 2px rgba(232,177,0,.38) inset}
+.map.aqi-unhealthy-sensitive{box-shadow:0 0 0 2px rgba(230,126,34,.38) inset}
+.map.aqi-unhealthy{box-shadow:0 0 0 2px rgba(220,53,69,.4) inset}
+.map.aqi-very-unhealthy{box-shadow:0 0 0 2px rgba(155,89,182,.4) inset}
+.map.aqi-hazardous{box-shadow:0 0 0 2px rgba(95,39,78,.42) inset}
 .tour{
   display:none;
   position:fixed;
@@ -325,6 +363,11 @@ button:hover{transform:translateY(-1px)}
   from{transform:translateY(8px);opacity:0}
   to{transform:translateY(0);opacity:1}
 }
+@keyframes pulse{
+  0%{transform:scale(.85);opacity:.5}
+  70%{transform:scale(1.2);opacity:1}
+  100%{transform:scale(.85);opacity:.5}
+}
 @media(max-width:1120px){
   body{padding:12px}
   .layout{grid-template-columns:1fr}
@@ -350,7 +393,7 @@ button:hover{transform:translateY(-1px)}
 <button id="resultJump" class="jump" type="button">Go to Result</button>
 <div class="layout">
 <section class="panel main">
-<div class="hero"><div><h1>AQI Predictor</h1><p>Philippine-city forecasting with trend, comparison, and what-if analysis.</p></div><div class="badge">PH MODEL ONLY</div></div>
+<div class="hero"><div><h1>AQI Predictor</h1><p>Philippine-city forecasting with trend, comparison, and what-if analysis.</p></div><div class="badge">Trained for Philippine Cities</div></div>
 <div class="notice">This model is trained and validated for Philippine cities. Unsupported cities are blocked to avoid misleading outputs.</div>
 <form id="predictorForm">
 <div class="grid3">
@@ -358,11 +401,19 @@ button:hover{transform:translateY(-1px)}
 <div class="field"><label for="year">Year</label><select id="year" required><option value="">Select year</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025" selected>2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option></select></div>
 <div class="field"><label for="month">Month</label><select id="month" required><option value="">Select month</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></div>
 </div>
-<div class="chips">{% for city in supported_cities[:10] %}<button type="button" class="chip" data-city="{{ city }}">{{ city }}</button>{% endfor %}</div>
-<div class="small">What-if mode: adjust sliders to test pollutant scenarios before predicting.</div>
+<div class="city-tools">
+<input id="citySearch" class="city-search" type="text" placeholder="Search city quick select..." title="Search and tap to fill city quickly.">
+<div id="cityChips" class="chips">{% for city in supported_cities[:10] %}<button type="button" class="chip" data-city="{{ city }}">{{ city }}</button>{% endfor %}</div>
+<div class="recent-wrap"><div class="small" style="margin:0;">Recently used cities</div><div id="recentCities" class="chips"></div></div>
+</div>
+<div class="toggles">
+<label class="toggle"><input id="advancedToggle" type="checkbox">Advanced Pollutants</label>
+<label class="toggle"><input id="lockRealistic" type="checkbox" checked>Lock realistic values only</label>
+</div>
+<div class="small" title="What-if mode lets you test pollutant scenarios before prediction.">What-if mode: adjust sliders to test pollutant scenarios before predicting.</div>
 <div class="rowsplit" id="pollRows"></div>
 <div id="autofillNote" class="note">Select city, year, and month to auto-fill pollutant values from historical data.</div>
-<div class="actions"><button type="button" id="autofillBtn" class="soft">Auto-Fill</button><button type="button" id="liveBtn" class="soft">Live Mode: Off</button><button type="button" id="resetBtn" class="soft">Reset</button><button type="button" id="compareBtn" class="soft">Compare Cities</button></div>
+<div class="actions"><button type="button" id="autofillBtn" class="soft">Auto-Fill</button><button type="button" id="liveBtn" class="soft">Real-Time Data: Disabled</button><button type="button" id="resetBtn" class="soft">Reset</button><button type="button" id="compareBtn" class="soft">Compare Cities</button></div>
 <button type="submit" class="primary" style="margin-top:8px;width:100%;">Predict AQI</button>
 </form>
 <div id="loading" class="loading">Predicting AQI...</div>
@@ -378,9 +429,9 @@ button:hover{transform:translateY(-1px)}
 </div>
 </section>
 <aside class="panel side">
-<div class="mini legend"><h3>AQI Band Guide</h3><div class="line"><span>Good</span><span>0-50</span></div><div class="line"><span>Moderate</span><span>51-100</span></div><div class="line"><span>Unhealthy for Sensitive Groups</span><span>101-150</span></div><div class="line"><span>Unhealthy</span><span>151-200</span></div><div class="line"><span>Very Unhealthy</span><span>201-300</span></div><div class="line"><span>Hazardous</span><span>300+</span></div></div>
-<div class="mini map"><h3>City Map Snapshot</h3><iframe id="cityMap" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-<div class="mini"><h3>Data Notes</h3><p class="small">Year-specific auto-fill depends on data availability. If no exact year match exists (e.g., 2025), the app falls back to city-month averages.</p></div>
+<div class="mini legend"><h3>AQI Band Guide</h3><div class="line" data-band="good" aria-label="AQI Good band 0 to 50"><span>Good</span><span>0-50</span></div><div class="line" data-band="moderate" aria-label="AQI Moderate band 51 to 100"><span>Moderate</span><span>51-100</span></div><div class="line" data-band="unhealthy-sensitive" aria-label="AQI Unhealthy for Sensitive Groups band 101 to 150"><span>Unhealthy for Sensitive Groups</span><span>101-150</span></div><div class="line" data-band="unhealthy" aria-label="AQI Unhealthy band 151 to 200"><span>Unhealthy</span><span>151-200</span></div><div class="line" data-band="very-unhealthy" aria-label="AQI Very Unhealthy band 201 to 300"><span>Very Unhealthy</span><span>201-300</span></div><div class="line" data-band="hazardous" aria-label="AQI Hazardous band above 300"><span>Hazardous</span><span>300+</span></div></div>
+<div class="mini map"><h3>City Map Snapshot</h3><iframe id="cityMap" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><div id="mapStatus" class="map-status">Map AQI glow appears after prediction.</div></div>
+<div class="mini"><h3>Data Notes</h3><p class="small" title="Fallback means the app uses city-month averages when exact city+month+year is unavailable.">Year-specific auto-fill depends on data availability. If no exact year match exists (e.g., 2025), the app falls back to city-month averages.</p></div>
 </aside>
 </div>
 <div id="tourOverlay" class="tour"><div class="tour-card"><h3 id="tourTitle">Welcome</h3><p id="tourBody"></p><div class="tour-actions"><button id="tourSkip" class="soft" type="button">Skip</button><button id="tourNext" class="primary" type="button">Next</button></div></div></div>
@@ -390,6 +441,9 @@ const form=document.getElementById('predictorForm');
 const fields=['pm25','pm10','no2','so2','co','o3','no','nh3'];
 const thresholds={pm25:35,pm10:50,no2:40,so2:20,co:400,o3:100,no:40,nh3:20};
 const ranges={pm25:[0,400],pm10:[0,500],no2:[0,300],so2:[0,250],co:[0,1000],o3:[0,300],no:[0,300],nh3:[0,200]};
+const units={pm25:'ug/m3',pm10:'ug/m3',no2:'ug/m3',so2:'ug/m3',co:'ppb',o3:'ug/m3',no:'ug/m3',nh3:'ug/m3'};
+const realisticCaps={pm25:180,pm10:280,no2:120,so2:90,co:700,o3:180,no:120,nh3:80};
+const primaryFields=new Set(['pm25','pm10']);
 const keys=new Set(supportedCities.map(normalizeCity));
 const pollRows=document.getElementById('pollRows');
 const loading=document.getElementById('loading');const error=document.getElementById('error');const errorText=document.getElementById('errorText');const result=document.getElementById('result');
@@ -398,23 +452,41 @@ const healthText=document.getElementById('healthText');const trendCanvas=documen
 const contribBars=document.getElementById('contribBars');const historyList=document.getElementById('historyList');const historyMeta=document.getElementById('historyMeta');const cityMap=document.getElementById('cityMap');
 const cityInput=document.getElementById('city');const yearSelect=document.getElementById('year');const monthSelect=document.getElementById('month');const note=document.getElementById('autofillNote');
 const resultJump=document.getElementById('resultJump');const compareInput=document.getElementById('compareCities');const compareList=document.getElementById('compareList');
+const citySearch=document.getElementById('citySearch');const cityChips=document.getElementById('cityChips');const recentCities=document.getElementById('recentCities');
+const advancedToggle=document.getElementById('advancedToggle');const lockRealistic=document.getElementById('lockRealistic');
+const mapStatus=document.getElementById('mapStatus');const mapCard=document.querySelector('.map');
 let live=false,liveTimer=null,lastResult=null,latestTrend=[];
 const HISTORY_KEY='aqi_prediction_history';
+const RECENT_KEY='aqi_recent_cities';
 
-fields.forEach((k)=>{const [min,max]=ranges[k];pollRows.insertAdjacentHTML('beforeend',`<div class="poll"><div class="top"><span>${k.toUpperCase()}</span><strong id="${k}Val">0</strong></div><input id="${k}" type="number" step="any" value="0"><input id="${k}Range" type="range" min="${min}" max="${max}" step="0.1" value="0"></div>`);});
+fields.forEach((k)=>{const [min,max]=ranges[k];const adv=primaryFields.has(k)?'':' advanced';pollRows.insertAdjacentHTML('beforeend',`<div class="poll${adv}" data-field="${k}"><div class="top"><span>${k.toUpperCase()} (${units[k]})</span><strong id="${k}Val">0</strong></div><input id="${k}" type="number" step="any" value="0" aria-label="${k.toUpperCase()} value"><input id="${k}Range" type="range" min="${min}" max="${max}" step="0.1" value="0" aria-label="${k.toUpperCase()} slider"><div class="meta"><span>${min}</span><span id="${k}Warn"></span><span>${max}</span></div></div>`);});
 
 function normalizeCity(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ')}
 function clearError(){error.classList.remove('show')}
 function showError(msg){errorText.textContent=msg;error.classList.add('show')}
 function statusClass(s){return String(s||'').toLowerCase().replace(/\s+/g,'-').replace('unhealthy-for-sensitive-groups','unhealthy-sensitive')}
+function statusColor(s){const m={good:'#2E8B57',moderate:'#E3B505','unhealthy-sensitive':'#E67E22',unhealthy:'#D93D3D','very-unhealthy':'#8E44AD',hazardous:'#5F264E'};return m[statusClass(s)]||'#0f8f8f'}
 function esc(v){return String(v??'').replace(/[&<>"']/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function monthLabel(m){return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(m)-1]||m}
-function sync(k,val){const n=document.getElementById(k),r=document.getElementById(k+'Range');const v=Number.isFinite(val)?val:0;n.value=v;r.value=v;document.getElementById(k+'Val').textContent=Number(v).toFixed(2)}
+function applyRealistic(k,v){if(!lockRealistic.checked)return v;const cap=Math.min(ranges[k][1],realisticCaps[k]||ranges[k][1]);return Math.max(ranges[k][0],Math.min(cap,v))}
+function setPollState(k,v){const box=pollRows.querySelector(`[data-field="${k}"]`);const warn=document.getElementById(k+'Warn');const over=v>(thresholds[k]||Infinity);box.classList.toggle('unsafe',over);warn.className=over?'warn':'';warn.textContent=over?'Above safe':'';const r=document.getElementById(k+'Range');r.style.setProperty('--slider-track',over?'linear-gradient(90deg,#d64545,#f2a9a9)':'linear-gradient(90deg,#0f8f8f,#8fcfce)')}
+function sync(k,val){const n=document.getElementById(k),r=document.getElementById(k+'Range');const raw=Number.isFinite(val)?val:0;const v=applyRealistic(k,raw);n.value=v;r.value=v;document.getElementById(k+'Val').textContent=Number(v).toFixed(2);setPollState(k,v)}
 function getPollutants(){const p={};fields.forEach((k)=>p[k]=parseFloat(document.getElementById(k).value||0));return p}
 function syncAll(){fields.forEach((k)=>sync(k,parseFloat(document.getElementById(k).value||0)))}
+function setBandHighlight(status){document.querySelectorAll('.legend .line').forEach((el)=>el.classList.toggle('active',el.dataset.band===statusClass(status)))}
+function setMapAQI(status){['aqi-good','aqi-moderate','aqi-unhealthy-sensitive','aqi-unhealthy','aqi-very-unhealthy','aqi-hazardous'].forEach((c)=>mapCard.classList.remove(c));const cls=`aqi-${statusClass(status)}`;if(status)mapCard.classList.add(cls);mapStatus.textContent=status?`Map AQI level: ${status}`:'Map AQI glow appears after prediction.'}
+function animateAQI(target){const to=Number(target)||0;const from=Number(resultAQI.textContent)||0;const dur=700;const start=performance.now();const step=(t)=>{const p=Math.min(1,(t-start)/dur);const eased=1-Math.pow(1-p,3);resultAQI.textContent=(from+(to-from)*eased).toFixed(2);if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+function renderCityChips(list){cityChips.innerHTML='';list.forEach((city)=>cityChips.insertAdjacentHTML('beforeend',`<button type="button" class="chip ${normalizeCity(city)===normalizeCity(cityInput.value)?'active':''}" data-city="${esc(city)}">${esc(city)}</button>`));bindCityChipEvents()}
+function addRecentCity(city){if(!city)return;const norm=normalizeCity(city);const arr=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');const next=[city,...arr.filter((c)=>normalizeCity(c)!==norm)].slice(0,6);localStorage.setItem(RECENT_KEY,JSON.stringify(next));renderRecentCities()}
+function renderRecentCities(){const arr=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');recentCities.innerHTML=arr.length?arr.map((c)=>`<button type="button" class="chip ${normalizeCity(c)===normalizeCity(cityInput.value)?'active':''}" data-city="${esc(c)}">${esc(c)}</button>`).join(''):'<span class="small" style="margin:0;">No recent city yet.</span>';bindCityChipEvents()}
+function bindCityChipEvents(){document.querySelectorAll('.chip[data-city]').forEach((c)=>{c.onclick=async()=>{if(c.classList.contains('muted'))return;cityInput.value=c.dataset.city;highlightCityValidity();await autoFill();schedLive();updateCitySelection()}})}
+function updateCitySelection(){const norm=normalizeCity(cityInput.value);document.querySelectorAll('.chip[data-city]').forEach((c)=>c.classList.toggle('active',normalizeCity(c.dataset.city)===norm))}
+function filterCities(){const q=normalizeCity(citySearch.value);const list=supportedCities.filter((c)=>normalizeCity(c).includes(q)).slice(0,12);renderCityChips(list.length?list:supportedCities.slice(0,10))}
+function highlightCityValidity(){const ok=keys.has(normalizeCity(cityInput.value.trim()));cityInput.style.borderColor=cityInput.value.trim()&&!ok?'#cf6a6a':'#b7cce4';cityInput.title=ok?'':'Unsupported city for this model'}
+function setAdvancedMode(){document.querySelectorAll('.poll.advanced').forEach((el)=>el.style.display=advancedToggle.checked?'grid':'none')}
 function contrib(p){const arr=fields.map((k)=>({k:k.toUpperCase(),s:Math.max(0,(Number(p[k]||0)/(thresholds[k]||1))*100)}));const t=arr.reduce((a,b)=>a+b.s,0)||1;contribBars.innerHTML='';arr.sort((a,b)=>b.s-a.s).forEach((it)=>{const pct=Math.round(it.s/t*100);contribBars.insertAdjacentHTML('beforeend',`<div class="crow"><div class="chead"><span>${it.k}</span><span>${pct}%</span></div><div class="bar"><span style="width:${pct}%"></span></div></div>`);});}
 function advice(s){const m={'Good':'Air quality is generally safe for outdoor activity.','Moderate':'Air is acceptable. Sensitive groups should monitor exposure.','Unhealthy for Sensitive Groups':'Sensitive groups should limit prolonged outdoor exertion.','Unhealthy':'Reduce outdoor exposure and consider masks when needed.','Very Unhealthy':'Avoid prolonged outdoor exposure. Use filtration if possible.','Hazardous':'Stay indoors and follow local health advisories.'};return m[s]||'No advice available.'}
-function drawGauge(aqi=0){const c=gaugeCanvas.getContext('2d'),w=gaugeCanvas.width,h=gaugeCanvas.height;c.clearRect(0,0,w,h);const bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#e9f2fb');bg.addColorStop(1,'#dde9f6');c.fillStyle=bg;c.fillRect(0,0,w,h);const pad={l:24,r:20,t:24,b:34};const vals=(latestTrend.length?latestTrend.map(p=>Number(p.aqi)||0):[Math.max(0,aqi*.5),Math.max(0,aqi*.8),Math.max(0,aqi*.7),Math.max(0,aqi)]).slice(-12);if(vals.length)vals[vals.length-1]=Number.isFinite(aqi)?aqi:vals[vals.length-1];const min=0,max=Math.max(50,...vals,Number(aqi)||0);for(let i=0;i<5;i++){const y=pad.t+((h-pad.t-pad.b)*i)/4;c.beginPath();c.strokeStyle='#b8cde4';c.lineWidth=1;c.moveTo(pad.l,y);c.lineTo(w-pad.r,y);c.stroke();}const pts=vals.map((v,i)=>{const x=pad.l+((w-pad.l-pad.r)*i)/Math.max(1,vals.length-1);const y=h-pad.b-((v-min)/(max-min||1))*(h-pad.t-pad.b);return {x,y,v};});if(!pts.length)return;c.beginPath();pts.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.lineTo(pts[pts.length-1].x,h-pad.b);c.lineTo(pts[0].x,h-pad.b);c.closePath();const g=c.createLinearGradient(0,pad.t,0,h-pad.b);g.addColorStop(0,'rgba(15,143,143,.25)');g.addColorStop(1,'rgba(15,143,143,.07)');c.fillStyle=g;c.fill();c.beginPath();pts.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.strokeStyle='#0f8f8f';c.lineWidth=2.4;c.stroke();pts.forEach((p,i)=>{c.beginPath();c.fillStyle='#0f8f8f';c.arc(p.x,p.y,i===pts.length-1?3.5:2.2,0,Math.PI*2);c.fill();});c.fillStyle='#1e365a';c.font='700 15px Segoe UI';c.textAlign='left';c.fillText(`AQI ${Number(aqi||0).toFixed(1)}`,pad.l,18);c.font='600 11px Segoe UI';c.fillStyle='#4d6281';c.textAlign='center';c.fillText('1',pad.l,h-10);c.fillText(String(vals.length),w-pad.r,h-10);}
+function drawGauge(aqi=0){const c=gaugeCanvas.getContext('2d'),w=gaugeCanvas.width,h=gaugeCanvas.height;c.clearRect(0,0,w,h);const bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#e9f2fb');bg.addColorStop(1,'#dde9f6');c.fillStyle=bg;c.fillRect(0,0,w,h);const line=statusColor(lastResult?.status);const pad={l:24,r:20,t:24,b:34};const vals=(latestTrend.length?latestTrend.map(p=>Number(p.aqi)||0):[Math.max(0,aqi*.5),Math.max(0,aqi*.8),Math.max(0,aqi*.7),Math.max(0,aqi)]).slice(-12);if(vals.length)vals[vals.length-1]=Number.isFinite(aqi)?aqi:vals[vals.length-1];const min=0,max=Math.max(50,...vals,Number(aqi)||0);for(let i=0;i<5;i++){const y=pad.t+((h-pad.t-pad.b)*i)/4;c.beginPath();c.strokeStyle='#b8cde4';c.lineWidth=1;c.moveTo(pad.l,y);c.lineTo(w-pad.r,y);c.stroke();}const pts=vals.map((v,i)=>{const x=pad.l+((w-pad.l-pad.r)*i)/Math.max(1,vals.length-1);const y=h-pad.b-((v-min)/(max-min||1))*(h-pad.t-pad.b);return {x,y,v};});if(!pts.length)return;c.beginPath();pts.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.lineTo(pts[pts.length-1].x,h-pad.b);c.lineTo(pts[0].x,h-pad.b);c.closePath();const g=c.createLinearGradient(0,pad.t,0,h-pad.b);g.addColorStop(0,line+'40');g.addColorStop(1,line+'14');c.fillStyle=g;c.fill();c.beginPath();pts.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.strokeStyle=line;c.lineWidth=2.4;c.stroke();pts.forEach((p,i)=>{c.beginPath();c.fillStyle=line;c.arc(p.x,p.y,i===pts.length-1?3.5:2.2,0,Math.PI*2);c.fill();});c.fillStyle='#1e365a';c.font='700 15px Segoe UI';c.textAlign='left';c.fillText(`AQI ${Number(aqi||0).toFixed(1)}`,pad.l,18);c.font='600 11px Segoe UI';c.fillStyle='#4d6281';c.textAlign='center';c.fillText('1',pad.l,h-10);c.fillText(String(vals.length),w-pad.r,h-10);}
 function drawTrend(tr=[]){const c=trendCanvas.getContext('2d'),w=trendCanvas.width,h=trendCanvas.height;c.clearRect(0,0,w,h);const bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#e9f2fb');bg.addColorStop(1,'#dde9f6');c.fillStyle=bg;c.fillRect(0,0,w,h);if(!tr.length){c.fillStyle='#60718d';c.font='13px Segoe UI';c.fillText('No trend data yet. Select city and predict.',14,24);return;}const pad=34,vals=tr.map(p=>p.aqi),min=Math.min(...vals),max=Math.max(...vals,min+1);for(let i=0;i<5;i++){const y=pad+((h-pad*2)*i)/4;c.beginPath();c.strokeStyle='#b8cde4';c.lineWidth=1;c.moveTo(pad,y);c.lineTo(w-pad,y);c.stroke();}const points=tr.map((p,i)=>{const x=pad+((w-pad*2)*i)/Math.max(1,tr.length-1);const y=h-pad-((p.aqi-min)/(max-min))*(h-pad*2);return {x,y};});c.beginPath();points.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.lineTo(points[points.length-1].x,h-pad);c.lineTo(points[0].x,h-pad);c.closePath();const g=c.createLinearGradient(0,pad,0,h-pad);g.addColorStop(0,'rgba(15,143,143,.25)');g.addColorStop(1,'rgba(15,143,143,.05)');c.fillStyle=g;c.fill();c.beginPath();points.forEach((p,i)=>{if(i===0)c.moveTo(p.x,p.y);else c.lineTo(p.x,p.y);});c.strokeStyle='#0f8f8f';c.lineWidth=2.4;c.stroke();points.forEach((p,i)=>{c.beginPath();c.fillStyle='#0f8f8f';c.arc(p.x,p.y,2.6,0,Math.PI*2);c.fill();if(i===0||i===points.length-1){c.fillStyle='#5a6f8d';c.font='11px Segoe UI';c.fillText(String(tr[i].month),p.x-4,h-10);}});}
 function historyId(x){return `${normalizeCity(x.city)}|${x.year}|${x.month}|${Number(x.aqi).toFixed(2)}|${String(x.status||'').toLowerCase()}`}
 function saveHistory(e){const arr=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');const item={...e,savedAt:new Date().toISOString()};const next=[item,...arr.filter((x)=>historyId(x)!==historyId(item))].slice(0,30);localStorage.setItem(HISTORY_KEY,JSON.stringify(next));renderHistory()}
@@ -424,31 +496,33 @@ function exportCsv(){if(!lastResult){showError('Predict first before exporting C
 function exportPdf(){if(!lastResult){showError('Predict first before exporting PDF.');return;}window.print()}
 async function updateMap(city){if(!city)return;try{const res=await fetch(`/city/coords?city_name=${encodeURIComponent(city)}`);const d=await res.json();if(!res.ok)return;const lat=d.lat,lon=d.lon,off=.08;cityMap.src=`https://www.openstreetmap.org/export/embed.html?bbox=${lon-off}%2C${lat-off}%2C${lon+off}%2C${lat+off}&layer=mapnik&marker=${lat}%2C${lon}`;}catch(_){}}
 async function loadTrend(city){if(!city){latestTrend=[];drawTrend([]);return;}try{const res=await fetch(`/trend?city_name=${encodeURIComponent(city)}`);const d=await res.json();if(!res.ok){latestTrend=[];drawTrend([]);return;}latestTrend=d.trend||[];drawTrend(latestTrend);}catch(_){latestTrend=[];drawTrend([]);}}
-async function autoFill(){const city=cityInput.value.trim(),month=parseInt(monthSelect.value,10),year=parseInt(yearSelect.value,10);if(!city||!month||!year)return;if(!keys.has(normalizeCity(city))){note.textContent='Auto-fill unavailable: enter a supported Philippine city.';return;}try{const qs=new URLSearchParams({city_name:city,month:String(month),year:String(year)});const res=await fetch(`/pollutants/defaults?${qs.toString()}`);const d=await res.json();if(!res.ok)throw new Error(d.error||'Unable to auto-fill pollutants.');fields.forEach((k)=>sync(k,Number(d.pollutants_dict[k])));note.textContent=d.source==='exact_city_month_year'?'Auto-filled from exact city + month + year records.':d.source==='city_month_fallback'?'Auto-filled from city + month average (year fallback used).':'Auto-filled from city-wide average fallback.';contrib(getPollutants());updateMap(city);loadTrend(city);}catch(err){note.textContent=`Auto-fill unavailable: ${err.message}`;}}
+async function autoFill(){const city=cityInput.value.trim(),month=parseInt(monthSelect.value,10),year=parseInt(yearSelect.value,10);if(!city||!month||!year)return;if(!keys.has(normalizeCity(city))){note.textContent='Auto-fill unavailable: enter a supported Philippine city.';highlightCityValidity();return;}try{const qs=new URLSearchParams({city_name:city,month:String(month),year:String(year)});const res=await fetch(`/pollutants/defaults?${qs.toString()}`);const d=await res.json();if(!res.ok)throw new Error(d.error||'Unable to auto-fill pollutants.');fields.forEach((k)=>sync(k,Number(d.pollutants_dict[k])));note.textContent=d.source==='exact_city_month_year'?'Auto-filled from exact city + month + year records.':d.source==='city_month_fallback'?'Auto-filled from city + month average (year fallback used).':'Auto-filled from city-wide average fallback.';contrib(getPollutants());highlightCityValidity();updateCitySelection();updateMap(city);loadTrend(city);}catch(err){note.textContent=`Auto-fill unavailable: ${err.message}`;}}
 
-async function predict({silent=false}={}){clearError();const city=cityInput.value.trim(),month=parseInt(monthSelect.value,10),year=parseInt(yearSelect.value,10);if(!city||!month||!year){if(!silent)showError('Please complete city, year, and month.');return;}if(!keys.has(normalizeCity(city))){if(!silent)showError('This predictor is Philippine-specific. Enter a supported Philippine city.');return;}const pollutants=getPollutants();contrib(pollutants);loading.classList.add('show');try{const res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({city_name:city,month,year,pollutants_dict:pollutants})});const d=await res.json();if(!res.ok)throw new Error(d.error||'Prediction failed');lastResult=d;result.className=`result show ${statusClass(d.status)}`;resultStatus.textContent=d.status;resultAQI.textContent=d.AQI;resultCity.textContent=`City: ${d.city} | Month: ${monthLabel(month)} | Year: ${year}`;healthText.textContent=advice(d.status);await loadTrend(city);drawGauge(Number(d.AQI));await updateMap(city);saveHistory({city:d.city,month,year,aqi:d.AQI,status:d.status});resultJump.classList.add('show');if(!silent)result.scrollIntoView({behavior:'smooth',block:'center'});}catch(err){if(!silent)showError(err.message);}finally{loading.classList.remove('show')}}
+async function predict({silent=false}={}){clearError();const city=cityInput.value.trim(),month=parseInt(monthSelect.value,10),year=parseInt(yearSelect.value,10);if(!city||!month||!year){if(!silent)showError('Please complete city, year, and month.');return;}if(!keys.has(normalizeCity(city))){if(!silent)showError('This predictor is Philippine-specific. Enter a supported Philippine city.');return;}const pollutants=getPollutants();contrib(pollutants);loading.classList.add('show');try{const res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({city_name:city,month,year,pollutants_dict:pollutants})});const d=await res.json();if(!res.ok)throw new Error(d.error||'Prediction failed');lastResult=d;result.className=`result show ${statusClass(d.status)}`;resultStatus.textContent=d.status;animateAQI(d.AQI);resultCity.textContent=`City: ${d.city} | Month: ${monthLabel(month)} | Year: ${year}`;healthText.textContent=advice(d.status);setBandHighlight(d.status);setMapAQI(d.status);await loadTrend(city);drawGauge(Number(d.AQI));await updateMap(city);saveHistory({city:d.city,month,year,aqi:d.AQI,status:d.status});addRecentCity(d.city);updateCitySelection();resultJump.classList.add('show');if(!silent)result.scrollIntoView({behavior:'smooth',block:'center'});}catch(err){if(!silent)showError(err.message);}finally{loading.classList.remove('show')}}
 
 async function runCompare(){clearError();const month=parseInt(monthSelect.value,10),year=parseInt(yearSelect.value,10);if(!month||!year){showError('Select year and month before comparing cities.');return;}const manual=compareInput.value.split(',').map(s=>s.trim()).filter(Boolean);const cities=manual.length?manual:[cityInput.value.trim()].filter(Boolean);if(!cities.length){showError('Enter at least one city for comparison.');return;}try{const res=await fetch('/compare',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cities:cities.slice(0,3),month,year})});const d=await res.json();if(!res.ok)throw new Error(d.error||'Comparison failed');compareList.innerHTML='';d.results.forEach((x)=>{compareList.insertAdjacentHTML('beforeend',`<div class="item"><span>${x.city}</span><strong>${x.error?x.error:`${x.aqi} (${x.status})`}</strong></div>`)});}catch(err){showError(err.message)}}
 
 function schedLive(){if(!live)return;if(liveTimer)clearTimeout(liveTimer);liveTimer=setTimeout(()=>predict({silent:true}),700)}
 function bindSync(k){const n=document.getElementById(k),r=document.getElementById(k+'Range');n.addEventListener('input',()=>{sync(k,parseFloat(n.value||0));contrib(getPollutants());schedLive()});r.addEventListener('input',()=>{sync(k,parseFloat(r.value||0));contrib(getPollutants());schedLive()});}
-function resetAll(){form.reset();yearSelect.value='2025';latestTrend=[];drawGauge(0);drawTrend([]);contrib(getPollutants());result.classList.remove('show');clearError();resultJump.classList.remove('show');note.textContent='Inputs reset. Select city, year, and month to auto-fill pollutant levels.';syncAll();compareList.innerHTML='';}
+function resetAll(){form.reset();yearSelect.value='2025';latestTrend=[];drawGauge(0);drawTrend([]);contrib(getPollutants());result.classList.remove('show');clearError();resultJump.classList.remove('show');note.textContent='Inputs reset. Select city, year, and month to auto-fill pollutant levels.';setBandHighlight('');setMapAQI('');syncAll();compareList.innerHTML='';updateCitySelection();highlightCityValidity();}
 
 function initTour(){const key='aqi_guided_tour_seen',ov=document.getElementById('tourOverlay'),tt=document.getElementById('tourTitle'),tb=document.getElementById('tourBody'),nx=document.getElementById('tourNext'),sk=document.getElementById('tourSkip');const steps=[['Welcome','This quick tour highlights key features of the upgraded AQI interface.'],['Step 1: City-Year-Month','Start with City, Year, and Month. Auto-fill uses this selection first.'],['Step 2: What-if Pollutants','Adjust number fields or sliders to test different pollutant scenarios.'],['Step 3: Predict + Insights','After prediction, view gauge, trend chart, health advice, contributions, map, and history.'],['Step 4: Compare + Export','Compare up to 3 cities, then export your current result as CSV or print-to-PDF.']];if(localStorage.getItem(key)==='1')return;let i=0;const render=()=>{tt.textContent=steps[i][0];tb.textContent=steps[i][1];nx.textContent=i===steps.length-1?'Finish':'Next';};const close=()=>{ov.classList.remove('show');localStorage.setItem(key,'1');};nx.addEventListener('click',()=>{if(i<steps.length-1){i++;render();}else close();});sk.addEventListener('click',close);render();ov.classList.add('show')}
 
-form.addEventListener('submit',(e)=>{e.preventDefault();predict()});cityInput.addEventListener('change',async()=>{await autoFill();schedLive()});cityInput.addEventListener('blur',async()=>{await autoFill();schedLive()});monthSelect.addEventListener('change',async()=>{await autoFill();schedLive()});yearSelect.addEventListener('change',async()=>{await autoFill();schedLive()});
-document.querySelectorAll('.chip').forEach((c)=>c.addEventListener('click',async()=>{cityInput.value=c.dataset.city;await autoFill();schedLive()}));
+form.addEventListener('submit',(e)=>{e.preventDefault();predict()});cityInput.addEventListener('change',async()=>{highlightCityValidity();updateCitySelection();await autoFill();schedLive()});cityInput.addEventListener('blur',async()=>{highlightCityValidity();updateCitySelection();await autoFill();schedLive()});monthSelect.addEventListener('change',async()=>{await autoFill();schedLive()});yearSelect.addEventListener('change',async()=>{await autoFill();schedLive()});
+citySearch.addEventListener('input',filterCities);
+advancedToggle.addEventListener('change',setAdvancedMode);
+lockRealistic.addEventListener('change',()=>{syncAll();contrib(getPollutants())});
 resultJump.addEventListener('click',()=>result.scrollIntoView({behavior:'smooth',block:'center'}));
 document.getElementById('autofillBtn').addEventListener('click',autoFill);document.getElementById('resetBtn').addEventListener('click',resetAll);document.getElementById('compareBtn').addEventListener('click',()=>compareInput.focus());document.getElementById('runCompare').addEventListener('click',runCompare);document.getElementById('downloadCsv').addEventListener('click',exportCsv);document.getElementById('downloadPdf').addEventListener('click',exportPdf);
 document.getElementById('clearHistory').addEventListener('click',clearHistory);
-document.getElementById('liveBtn').addEventListener('click',(e)=>{live=!live;e.target.textContent=`Live Mode: ${live?'On':'Off'}`;e.target.classList.toggle('primary',live);e.target.classList.toggle('soft',!live);if(live)schedLive();});
+document.getElementById('liveBtn').addEventListener('click',(e)=>{live=!live;e.target.textContent=`Real-Time Data: ${live?'Enabled':'Disabled'}`;e.target.classList.toggle('primary',live);e.target.classList.toggle('soft',!live);if(live)schedLive();});
 function triggerInitialAutoFill(){
     if(cityInput.value.trim() && monthSelect.value && yearSelect.value){
         autoFill();
     }
 }
 
-fields.forEach(bindSync);renderHistory();syncAll();drawGauge(0);drawTrend([]);contrib(getPollutants());initTour();
+fields.forEach(bindSync);renderHistory();renderRecentCities();filterCities();setAdvancedMode();syncAll();drawGauge(0);drawTrend([]);contrib(getPollutants());setBandHighlight('');setMapAQI('');highlightCityValidity();initTour();
 triggerInitialAutoFill();
 window.addEventListener('pageshow', triggerInitialAutoFill);
 setTimeout(triggerInitialAutoFill, 120);
