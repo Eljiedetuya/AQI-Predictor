@@ -435,8 +435,9 @@ button:hover{transform:translateY(-1px)}
 </aside>
 </div>
 <div id="tourOverlay" class="tour"><div class="tour-card"><h3 id="tourTitle">Welcome</h3><p id="tourBody"></p><div class="tour-actions"><button id="tourSkip" class="soft" type="button">Skip</button><button id="tourNext" class="primary" type="button">Next</button></div></div></div>
+<script id="supported-cities-data" type="application/json">{{ supported_cities | tojson }}</script>
 <script>
-const supportedCities = {{ supported_cities | tojson }};
+const supportedCities = JSON.parse(document.getElementById('supported-cities-data').textContent);
 const form=document.getElementById('predictorForm');
 const fields=['pm25','pm10','no2','so2','co','o3','no','nh3'];
 const thresholds={pm25:35,pm10:50,no2:40,so2:20,co:400,o3:100,no:40,nh3:20};
